@@ -109,8 +109,8 @@ bool EzLoRaWAN_BLE::begin(std::string bt_name)
     len = ttn->getAppEui(buf);
     pCharacteristicAppEUI->setValue(buf, len);
 
-    //len = ttn->getAppKey(buf);
-    //pCharacteristicAppKey->setValue(buf, len);
+    len = ttn->getPartialAppKey(buf);
+    pCharacteristicAppKey->setValue(buf, len);
 
     pService->start();
     BLEAdvertising* pAdvertising = pServer->getAdvertising();

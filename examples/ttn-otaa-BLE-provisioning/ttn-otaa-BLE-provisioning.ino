@@ -3,7 +3,7 @@
   https://play.google.com/store/apps/details?id=org.rgot.BLE_TEST
   this program was tested with heltech boards (Heltec Wifi Lora 32 & Heltec Wireless Stick)
 
-  When running press the user button (named PROG on board)  the on board Led Light 
+  When running press the user button (named PROG on board)  the on board LED_BUILTIN Light 
   and the Bluetooth Low Energy (BLE) is power on.
   On the Android application you can see a new device named "RGOT_xxx" where xxx is the hardware devEui.
 
@@ -12,17 +12,26 @@
   When finish press the back arrow, then the esp32 board reboot and take your new parameters.
 
 */
-#include "LoRaWan_BLE_esp32.h"
-#include <LoRaWan_esp32.h>
-#include "LoRaWan_CayenneLPP.h"
+#include <EzLoRaWAN_BLE.h>
+#include <EzLoRaWAN_CayenneLPP.h>
+#include <EzLoRaWAN.h>
 
 // wireless stick pinout
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 25
+#endif // !LED_BUILTIN
+#ifndef KEY_BUILTIN
+#define  KEY_BUILTIN 0
+#endif // !1
 
 #define INTERVAL 30000
-LoRaWan_esp32 ttn;
-LoRaWan_BLE_esp32 ble;
-LoRaWan_CayenneLPP lpp;
+EzLoRaWAN ttn;
+EzLoRaWAN_BLE ble;
+EzLoRaWAN_CayenneLPP lpp;
 
+#ifndef AUTO_PIN_MAP // AUTO_PIN_MAP is set if board is defined in the file target-config.h
+#include "board_config.h"
+#endif // !AUTO_PINS
 void setup() {
 	
     Serial.begin(115200);
@@ -42,8 +51,8 @@ Select the RGOT_... device and provisioning the keys\n\
 Quit the android App, then the esp32 restart...	");
 	}
 	pinMode(KEY_BUILTIN, INPUT);
-	pinMode(LED, OUTPUT);
-	digitalWrite(LED, LOW);
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
@@ -54,7 +63,7 @@ void loop() {
 	{
 		ttn.stop();
 		ble.begin();			
-			digitalWrite(LED, HIGH);	
+			digitalWrite(LED_BUILTIN, HIGH);	
 		while (!digitalRead(KEY_BUILTIN));
 			
 	}
